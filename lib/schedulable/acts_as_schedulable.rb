@@ -150,9 +150,13 @@ module Schedulable
                     end
                   end
                 else
-                  # Create new record
-                  if !occurrences_records.create(date: occurrence.to_datetime)
-                    puts 'An error occurred while creating an occurrence record'
+                  # Skip creation if singular occurrence already exists
+                  if schedule.rule == 'singular' && schedule.schedulable.send("#{occurrences_association}").count > 0
+                  else
+                    # Create new record
+                    if !occurrences_records.create(date: occurrence.to_datetime)
+                      puts 'An error occurred while creating an occurrence record'
+                    end
                   end
                 end
               end
